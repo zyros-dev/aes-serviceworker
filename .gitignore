@@ -1,0 +1,4 @@
+node_modules/
+test-encrypted.bin
+*.log
+.DS_Store

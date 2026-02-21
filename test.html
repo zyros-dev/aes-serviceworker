@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Service Worker Decrypt Test</title>
+</head>
+<body>
+  <h1>Service Worker Decrypt Test</h1>
+  <button id="testBtn">Test Fetch & Decrypt</button>
+  <div id="result"></div>
+
+  <script>
+    const resultDiv = document.getElementById('result');
+
+    navigator.serviceWorker.register('/sw.js')
+      .then(registration => {
+        console.log('Service Worker registered:', registration.scope);
+        resultDiv.innerHTML += '<p>✓ Service Worker registered</p>';
+        return navigator.serviceWorker.ready;
+      })
+      .then(() => {
+        console.log('Service Worker ready');
+        resultDiv.innerHTML += '<p>✓ Service Worker ready</p>';
+      })
+      .catch(error => {
+        console.error('Service Worker registration failed:', error);
+        resultDiv.innerHTML += '<p>✗ Service Worker registration failed: ' + error + '</p>';
+      });
+
+    document.getElementById('testBtn').addEventListener('click', async () => {
+      try {
+        resultDiv.innerHTML += '<p>Fetching encrypted data...</p>';
+        const response = await fetch('/api/data');
+        const text = await response.text();
+
+        resultDiv.innerHTML += '<p>✓ Decrypted response: <strong>' + text + '</strong></p>';
+        console.log('Decrypted:', text);
+      } catch (error) {
+        resultDiv.innerHTML += '<p>✗ Error: ' + error + '</p>';
+        console.error('Error:', error);
+      }
+    });
+  </script>
+</body>
+</html>
